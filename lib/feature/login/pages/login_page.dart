@@ -1,6 +1,7 @@
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:push_ups/feature/home/presentation/pages/home_page.dart';
 import 'package:push_ups/feature/login/bloc/login_bloc.dart';
 import 'package:push_ups/feature/login/bloc/login_event.dart';
 import 'package:push_ups/feature/login/bloc/login_state.dart';
@@ -16,7 +17,7 @@ class LoginPage extends StatelessWidget {
         create: (context) => bloc,
         child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
           if (state is LoginSuccess) {
-            return Text('success');
+            return const HomePage();
           } else if (state is LoginInitial) {
             return Center(child: GoogleAuthButton(
               onPressed: () {
