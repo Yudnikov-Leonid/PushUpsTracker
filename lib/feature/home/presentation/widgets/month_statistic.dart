@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:push_ups/core/colors.dart';
 
-class MouthStatistic extends StatelessWidget {
-  MouthStatistic(this.title, this.data, {super.key});
+class MonthStatistic extends StatelessWidget {
+  MonthStatistic(this.title, this.data, {super.key});
 
   final String title;
   final List<int> data;

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "116727104808",
+    "firebase_url": "https://pushupstracker-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "pushupstracker",
     "storage_bucket": "pushupstracker.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.push_ups"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "116727104808-1l50dh7oj7dmcsu6suvoug7j0f0nmls8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.push_ups",
+            "certificate_hash": "17522fe05687d30acb8d059bfba915786639f9ad"
+          }
+        },
+        {
+          "client_id": "116727104808-ke75i8kmcfjieqgc47qtjs09ck3moftb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBEORymHJ6e09HU9R-t-Xllb-fwIHVcb4o"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116727104808-ke75i8kmcfjieqgc47qtjs09ck3moftb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "116727104808-cs9slhgf09hrc0g2ija3ujqsfpanojud.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pushUps"
+              }
+            }
+          ]
         }
       }
     }
