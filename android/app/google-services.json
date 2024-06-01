@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "116727104808",
+    "project_id": "pushupstracker",
+    "storage_bucket": "pushupstracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116727104808:android:3d0aee7948bc817905bc1d",
+        "android_client_info": {
+          "package_name": "com.example.push_ups"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEORymHJ6e09HU9R-t-Xllb-fwIHVcb4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
