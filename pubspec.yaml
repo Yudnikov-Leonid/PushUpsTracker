@@ -7,11 +7,14 @@ environment:
   sdk: '>=3.4.1 <4.0.0'
 
 dependencies:
+  auth_buttons: ^3.0.2
   firebase_auth: ^4.20.0
   firebase_core: ^2.32.0
   firebase_database: ^10.5.7
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.5
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
