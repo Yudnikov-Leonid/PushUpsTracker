@@ -95,7 +95,9 @@ class MonthStatistic extends StatelessWidget {
                   Text('Sat')
                 ],
               ),
-              const SizedBox(width: 12,),
+              const SizedBox(
+                width: 12,
+              ),
               Expanded(
                 child: SizedBox(
                   height: 160,
@@ -147,7 +149,7 @@ class MonthStatistic extends StatelessWidget {
   Widget _guideBox(Color color) {
     return Container(
         decoration:
-            BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
+            BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
         width: 17,
         height: 17,
         margin: const EdgeInsets.symmetric(horizontal: 2));
@@ -170,7 +172,7 @@ class MonthStatistic extends StatelessWidget {
       color = AppColors.fiveLevelColor;
     }
     return Tooltip(
-      message: value.toString(),
+      message: value == -1 ? '' : value.toString(),
       triggerMode: TooltipTriggerMode.tap,
       child: Container(
           decoration: BoxDecoration(

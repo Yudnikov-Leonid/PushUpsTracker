@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:push_ups/feature/home/domain/entity/day_push_ups.dart';
+import 'package:push_ups/feature/home/presentation/pages/add_push_ups.dart';
 import 'package:push_ups/feature/home/presentation/widgets/month_statistic.dart';
 
 class HomePage extends StatefulWidget {
@@ -77,7 +78,14 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) => AddPushUpsDialog(
+                  _data[DateFormat('yyyy-MM-dd').format(DateTime.now())]
+                          ?.value ??
+                      0));
+        },
         backgroundColor: Colors.green.shade300,
         child: const Icon(
           Icons.add,
