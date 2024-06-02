@@ -6,19 +6,25 @@ import 'package:intl/intl.dart';
 import 'package:push_ups/core/firebase_repository.dart';
 import 'package:push_ups/feature/login/bloc/login_bloc.dart';
 import 'package:push_ups/feature/login/bloc/login_event.dart';
+import 'package:push_ups/feature/profile/presentation/widgets/goal_pie.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage(this._repository, {super.key});
 
   final FirebaseRepository _repository;
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             const Icon(
@@ -39,7 +45,7 @@ class ProfilePage extends StatelessWidget {
                       builder: (_) => AlertDialog(
                             title: const Text('Reset today?'),
                             content: Text(
-                                'Push ups today: ${_repository.data[DateFormat('yyyy-MM-dd').format(DateTime.now())]?.value ?? 0}'),
+                                'Push ups today: ${widget._repository.data[DateFormat('yyyy-MM-dd').format(DateTime.now())]?.value ?? 0}'),
                             actions: [
                               TextButton(
                                   onPressed: () {
@@ -50,6 +56,7 @@ class ProfilePage extends StatelessWidget {
                                   onPressed: () async {
                                     await _resetDay();
                                     Navigator.of(context).pop();
+                                    setState(() {});
                                   },
                                   child: const Text('Reset')),
                             ],
@@ -61,7 +68,12 @@ class ProfilePage extends StatelessWidget {
                 context.read<LoginBloc>().add(LogOutEvent());
               },
               child: const Text('Log out'),
-            )
+            ),
+            GoalPie(
+                widget._repository.data.values
+                    .where((e) => e.season == 3)
+                    .fold(0, (a, b) => a + b.value),
+                10000)
           ],
         ),
       ),
