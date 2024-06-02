@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:push_ups/feature/home/domain/entity/day_push_ups.dart';
 import 'package:push_ups/feature/home/presentation/widgets/month_statistic.dart';
 
@@ -14,13 +15,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final Map<String, DayPushUps> _data = {};
   final Map<int, List<String>> _map = {}; //season, dates
+  int _last28Days = 0;
 
   @override
   void initState() {
     final ref = FirebaseDatabase.instance.ref('push-ups').orderByChild('date');
+    final formatter = DateFormat('yyyy-MM-dd');
     ref.onValue.listen((sn) {
       _map.clear();
       _data.clear();
+
+      final previous28Days = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day - 28);
 
       final list = sn.snapshot.children.where((child) =>
           child.child('userId').value.toString() ==
@@ -36,6 +42,10 @@ class _HomePageState extends State<HomePage> {
           _map[e.season] = [e.date];
         } else {
           _map[e.season]!.add(e.date);
+        }
+        if (formatter.parse(e.date).millisecondsSinceEpoch >
+            previous28Days.millisecondsSinceEpoch) {
+          _last28Days += e.value;
         }
       });
       setState(() {});
@@ -89,8 +99,9 @@ class _HomePageState extends State<HomePage> {
               FirebaseAuth.instance.currentUser!.displayName ?? 'user',
               style: const TextStyle(fontSize: 18),
             ),
-            Text('Last 28 days: 2500 push ups'),
-            Text('Today: 80'),
+            Text('Last 28 days: $_last28Days push ups'),
+            Text(
+                'Today: ${_data[DateFormat('yyyy-MM-dd').format(DateTime.now())]?.value ?? 0}'),
             const SizedBox(
               height: 50,
             ),

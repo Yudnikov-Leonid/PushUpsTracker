@@ -93,7 +93,7 @@ class MonthStatistic extends StatelessWidget {
           Row(
             children: [
               Text(
-                '${data.fold(0, (a, b) => a + b.value)} in total',
+                '${result.fold(0, (a, b) => a + b)} in total',
                 style: const TextStyle(fontSize: 13),
               ),
               const Expanded(child: SizedBox()),
