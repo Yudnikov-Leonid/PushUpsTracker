@@ -30,7 +30,6 @@ class MonthStatistic extends StatelessWidget {
         firstDayDateTime.day != 1) {
       firstDayDateTime.add(const Duration(days: -1));
       firstDayDateTime.add(Duration(days: -firstDayDateTime.day));
-      print('firstDayDateTime: ${formatter.format(firstDayDateTime)}');
     }
     var currentDate = firstDayDateTime.millisecondsSinceEpoch ~/ 86400000;
 
@@ -38,6 +37,9 @@ class MonthStatistic extends StatelessWidget {
     final nextMonth = month + 3;
 
     final result = <int>[];
+    for (int i = 0; i < firstDayDateTime.weekday; i++) {
+      result.add(-1);
+    }
     while (month < nextMonth) {
       if (data.isNotEmpty) {
         if (formatter.format(
@@ -78,14 +80,33 @@ class MonthStatistic extends StatelessWidget {
             title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          SizedBox(
-            height: 160,
-            width: double.infinity,
-            child: GridView.count(
-              scrollDirection: Axis.horizontal,
-              crossAxisCount: 7,
-              children: result.map((value) => _box(value)).toList(),
-            ),
+          Row(
+            children: [
+              const Column(
+                children: [
+                  Text('Tue'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Thu'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text('Sat')
+                ],
+              ),
+              const SizedBox(width: 12,),
+              Expanded(
+                child: SizedBox(
+                  height: 160,
+                  child: GridView.count(
+                    scrollDirection: Axis.horizontal,
+                    crossAxisCount: 7,
+                    children: result.map((value) => _box(value)).toList(),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             height: 6,
@@ -135,7 +156,9 @@ class MonthStatistic extends StatelessWidget {
   Widget _box(int value) {
     final percent = (value / _max * 100).round();
     final Color color;
-    if (percent == 0) {
+    if (value == -1) {
+      color = Colors.transparent;
+    } else if (percent == 0) {
       color = AppColors.oneLevelColor;
     } else if (percent < 30) {
       color = AppColors.twoLevelColor;
