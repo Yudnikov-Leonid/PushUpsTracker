@@ -18,7 +18,7 @@ class LoginPage extends StatelessWidget {
         create: (context) => bloc,
         child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
           if (state is LoginSuccess) {
-            return const MainPage();
+            return MainPage();
           } else if (state is LoginInitial) {
             return Center(child: GoogleAuthButton(
               onPressed: () {

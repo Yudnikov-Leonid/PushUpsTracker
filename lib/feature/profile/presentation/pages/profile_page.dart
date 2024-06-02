@@ -1,0 +1,73 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:push_ups/core/firebase_repository.dart';
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage(this._repository, {super.key});
+
+  final FirebaseRepository _repository;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Icon(
+              Icons.person,
+              size: 60,
+            ),
+            Text(
+              FirebaseAuth.instance.currentUser!.displayName ?? 'user',
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                            title: const Text('Reset today?'),
+                            content: Text(
+                                'Push ups today: ${_repository.data[DateFormat('yyyy-MM-dd').format(DateTime.now())]?.value ?? 0}'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Cancel')),
+                              TextButton(
+                                  onPressed: () async {
+                                    await _resetDay();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Reset')),
+                            ],
+                          ));
+                },
+                child: Text('Reset today')),
+            TextButton(
+              onPressed: () {},
+              child: const Text('Log out'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _resetDay() async {
+    final ref = FirebaseDatabase.instance.ref('push-ups');
+    await ref
+        .child(
+            '${FirebaseAuth.instance.currentUser!.uid}|${DateFormat('yyyy-MM-dd').format(DateTime.now())}')
+        .remove();
+  }
+}

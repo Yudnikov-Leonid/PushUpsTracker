@@ -2,68 +2,43 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:push_ups/core/firebase_repository.dart';
 import 'package:push_ups/feature/home/domain/entity/day_push_ups.dart';
 import 'package:push_ups/feature/home/presentation/pages/add_push_ups.dart';
 import 'package:push_ups/feature/home/presentation/widgets/month_statistic.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage(this._repository, {super.key});
+
+  final FirebaseRepository _repository;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final Map<String, DayPushUps> _data = {};
-  final Map<int, List<String>> _map = {}; //season, dates
-  int _last28Days = 0;
-
-  bool _isLoading = false;
+  VoidCallback _callback = () {};
 
   @override
   void initState() {
-    final ref = FirebaseDatabase.instance.ref('push-ups').orderByChild('date');
-    final formatter = DateFormat('yyyy-MM-dd');
-    ref.onValue.listen((sn) {
-      _isLoading = true;
-      _map.clear();
-      _data.clear();
-
-      final previous28Days = DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day - 28);
-
-      final list = sn.snapshot.children.where((child) =>
-          child.child('userId').value.toString() ==
-          FirebaseAuth.instance.currentUser!.uid);
-      list.forEach((e) {
-        _data[e.child('date').value.toString()] = DayPushUps(
-            value: int.parse(e.child('value').value.toString()),
-            season: int.parse(e.child('season').value.toString()),
-            date: e.child('date').value.toString());
-      });
-      _data.forEach((key, e) {
-        if (_map[e.season] == null) {
-          _map[e.season] = [e.date];
-        } else {
-          _map[e.season]!.add(e.date);
-        }
-        if (formatter.parse(e.date).millisecondsSinceEpoch >
-            previous28Days.millisecondsSinceEpoch) {
-          _last28Days += e.value;
-        }
-      });
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _callback = () {
+      setState(() {});
+    };
+    widget._repository.addCallback(_callback);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget._repository.removeCallback(_callback);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final seasons = <MonthStatistic>[];
 
-    _map.forEach((key, v) {
+    widget._repository.map.forEach((key, v) {
       final String title;
       if (key % 4 == 1) {
         title = 'Winter';
@@ -74,22 +49,21 @@ class _HomePageState extends State<HomePage> {
       } else {
         title = 'Autumn';
       }
-      seasons.add(MonthStatistic(title, v.map((e) => _data[e]!).toList()));
+      seasons.add(MonthStatistic(
+          title, v.map((e) => widget._repository.data[e]!).toList()));
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Push ups tracker'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Push ups tracker')),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
               context: context,
-              builder: (context) => AddPushUpsDialog(
-                  _data[DateFormat('yyyy-MM-dd').format(DateTime.now())]
-                          ?.value ??
-                      0));
+              builder: (context) => AddPushUpsDialog(widget
+                      ._repository
+                      .data[DateFormat('yyyy-MM-dd').format(DateTime.now())]
+                      ?.value ??
+                  0));
         },
         backgroundColor: Colors.green.shade300,
         child: const Icon(
@@ -112,20 +86,16 @@ class _HomePageState extends State<HomePage> {
               FirebaseAuth.instance.currentUser!.displayName ?? 'user',
               style: const TextStyle(fontSize: 18),
             ),
-            Text('Last 28 days: $_last28Days push ups'),
+            Text('Last 28 days: ${widget._repository.last28Days} push ups'),
             Text(
-                'Today: ${_data[DateFormat('yyyy-MM-dd').format(DateTime.now())]?.value ?? 0}'),
+                'Today: ${widget._repository.data[DateFormat('yyyy-MM-dd').format(DateTime.now())]?.value ?? 0}'),
             const SizedBox(
               height: 50,
             ),
             const Text('Statistic by seasons'),
-            _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Column(
-                    children: seasons.reversed.toList(),
-                  ),
+            Column(
+              children: seasons.reversed.toList(),
+            ),
             const SizedBox(
               height: 65,
             )

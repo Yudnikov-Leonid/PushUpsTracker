@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:push_ups/core/firebase_repository.dart';
 import 'package:push_ups/feature/home/presentation/pages/home_page.dart';
+import 'package:push_ups/feature/profile/presentation/pages/profile_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -10,13 +12,24 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0;
-  final List<Widget> _body = const [
-    HomePage(key: PageStorageKey('home'),),
-    Text('2', key: PageStorageKey('profile'))
-  ];
+
+  List<Widget> _body = [];
 
   final PageStorageBucket _bucket = PageStorageBucket();
 
+  @override
+  void initState() {
+    final _repository = FirebaseRepository();
+    _repository.init();
+    _body = [
+      HomePage(
+        _repository,
+        key: const PageStorageKey('home'),
+      ),
+      ProfilePage(_repository, key: const PageStorageKey('profile'))
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +50,7 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: 'Profile')
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
         ],
       ),
     );
