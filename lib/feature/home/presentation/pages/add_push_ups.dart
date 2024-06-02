@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddPushUpsDialog extends StatelessWidget {
-  AddPushUpsDialog(this._pushUpsToday, {super.key});
+  AddPushUpsDialog(this._pushUpsToday, this.currentSeason, {super.key});
 
   final _controller = TextEditingController();
   final int _pushUpsToday;
   bool isAdding = false;
+  final int currentSeason;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class AddPushUpsDialog extends StatelessWidget {
     final date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     await ref.child('${FirebaseAuth.instance.currentUser!.uid}|$date').set({
       'userId': FirebaseAuth.instance.currentUser!.uid,
-      'season': 3,
+      'season': currentSeason,
       'date': date,
       'value': _pushUpsToday + value
     });

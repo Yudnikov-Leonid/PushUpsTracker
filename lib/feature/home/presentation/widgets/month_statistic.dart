@@ -9,7 +9,7 @@ class MonthStatistic extends StatelessWidget {
   MonthStatistic(this.title, this.data, {super.key});
 
   final String title;
-  final List<DayPushUps> data;
+  final List<BaseDayPushUps> data;
 
   late int _max;
 
@@ -36,22 +36,24 @@ class MonthStatistic extends StatelessWidget {
     var month = firstDayDateTime.month;
     final nextMonth = month + 3;
 
-    final result = <int>[];
-    for (int i = 0; i < firstDayDateTime.weekday -1; i++) {
-      result.add(-1);
+    final result = <DayPushUps>[];
+    for (int i = 0; i < firstDayDateTime.weekday - 1; i++) {
+      result.add(EmptyDayPushUps());
     }
     while (month < nextMonth) {
       if (data.isNotEmpty) {
         if (formatter.format(
                 DateTime.fromMillisecondsSinceEpoch(currentDate * 86400000)) ==
             data.first.date) {
-          result.add(data.first.value);
+          result.add(data.first);
           data.removeAt(0);
         } else {
-          result.add(0);
+          result.add(ZeroDayPushUps(formatter.format(
+              DateTime.fromMillisecondsSinceEpoch(currentDate * 86400000))));
         }
       } else {
-        result.add(0);
+        result.add(ZeroDayPushUps(formatter.format(
+            DateTime.fromMillisecondsSinceEpoch(currentDate * 86400000))));
       }
       currentDate++;
       if (nextMonth == 15) {
@@ -117,7 +119,7 @@ class MonthStatistic extends StatelessWidget {
           Row(
             children: [
               Text(
-                '${result.fold(0, (a, b) => a + b)} in total',
+                '${result.fold(0, (a, b) => a + b.value)} in total',
                 style: const TextStyle(fontSize: 13),
               ),
               const Expanded(child: SizedBox()),
@@ -156,10 +158,10 @@ class MonthStatistic extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 2));
   }
 
-  Widget _box(int value) {
-    final percent = (value / _max * 100).round();
+  Widget _box(DayPushUps pushUps) {
+    final percent = (pushUps.value / _max * 100).round();
     final Color color;
-    if (value == -1) {
+    if (pushUps.value == -1) {
       color = Colors.transparent;
     } else if (percent == 0) {
       color = AppColors.oneLevelColor;
@@ -173,7 +175,9 @@ class MonthStatistic extends StatelessWidget {
       color = AppColors.fiveLevelColor;
     }
     return Tooltip(
-      message: value == -1 ? '' : value.toString(),
+      message: pushUps.value == -1
+          ? ''
+          : '${pushUps.date}: ${pushUps.value.toString()}',
       triggerMode: TooltipTriggerMode.tap,
       child: Container(
           decoration: BoxDecoration(

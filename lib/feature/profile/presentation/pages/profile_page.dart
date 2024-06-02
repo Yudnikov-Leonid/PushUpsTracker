@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             GoalPie(
                 widget._repository.data.values
-                    .where((e) => e.season == 3)
+                    .where((e) => e.season == widget._repository.currentSeason)
                     .fold(0, (a, b) => a + b.value),
                 10000)
           ],

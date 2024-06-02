@@ -9,9 +9,11 @@ class FirebaseRepository {
   final List<VoidCallback> _callbacks = [];
   FirebaseRepository();
 
-  final Map<String, DayPushUps> data = {};
+  final Map<String, BaseDayPushUps> data = {};
   final Map<int, List<String>> map = {}; //season, dates
   int last28Days = 0;
+
+  int currentSeason = 0;
 
   void addCallback(VoidCallback reload) {
     _callbacks.add(reload);
@@ -22,6 +24,11 @@ class FirebaseRepository {
   }
 
   void init() {
+    var month = DateTime.now().month;
+    month += (DateTime.now().year - 2024) * 12;
+    currentSeason = month ~/ 3 + 1;
+
+
     final ref = FirebaseDatabase.instance.ref('push-ups').orderByChild('date');
     final formatter = DateFormat('yyyy-MM-dd');
     ref.onValue.listen((sn) {
@@ -36,7 +43,7 @@ class FirebaseRepository {
           child.child('userId').value.toString() ==
           FirebaseAuth.instance.currentUser!.uid);
       list.forEach((e) {
-        data[e.child('date').value.toString()] = DayPushUps(
+        data[e.child('date').value.toString()] = BaseDayPushUps(
             value: int.parse(e.child('value').value.toString()),
             season: int.parse(e.child('season').value.toString()),
             date: e.child('date').value.toString());

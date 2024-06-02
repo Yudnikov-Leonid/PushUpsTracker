@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:push_ups/core/firebase_repository.dart';
-import 'package:push_ups/feature/home/domain/entity/day_push_ups.dart';
 import 'package:push_ups/feature/home/presentation/pages/add_push_ups.dart';
 import 'package:push_ups/feature/home/presentation/widgets/month_statistic.dart';
 
@@ -59,11 +57,13 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           showDialog(
               context: context,
-              builder: (context) => AddPushUpsDialog(widget
-                      ._repository
-                      .data[DateFormat('yyyy-MM-dd').format(DateTime.now())]
-                      ?.value ??
-                  0));
+              builder: (context) => AddPushUpsDialog(
+                  widget
+                          ._repository
+                          .data[DateFormat('yyyy-MM-dd').format(DateTime.now())]
+                          ?.value ??
+                      0,
+                  widget._repository.currentSeason));
         },
         backgroundColor: Colors.green.shade300,
         child: const Icon(
