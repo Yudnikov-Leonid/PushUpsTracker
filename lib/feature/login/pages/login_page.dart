@@ -5,6 +5,7 @@ import 'package:push_ups/feature/home/presentation/pages/home_page.dart';
 import 'package:push_ups/feature/login/bloc/login_bloc.dart';
 import 'package:push_ups/feature/login/bloc/login_event.dart';
 import 'package:push_ups/feature/login/bloc/login_state.dart';
+import 'package:push_ups/feature/main/main_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -17,7 +18,7 @@ class LoginPage extends StatelessWidget {
         create: (context) => bloc,
         child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
           if (state is LoginSuccess) {
-            return const HomePage();
+            return const MainPage();
           } else if (state is LoginInitial) {
             return Center(child: GoogleAuthButton(
               onPressed: () {

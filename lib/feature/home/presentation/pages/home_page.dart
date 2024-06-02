@@ -18,11 +18,14 @@ class _HomePageState extends State<HomePage> {
   final Map<int, List<String>> _map = {}; //season, dates
   int _last28Days = 0;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     final ref = FirebaseDatabase.instance.ref('push-ups').orderByChild('date');
     final formatter = DateFormat('yyyy-MM-dd');
     ref.onValue.listen((sn) {
+      _isLoading = true;
       _map.clear();
       _data.clear();
 
@@ -49,7 +52,9 @@ class _HomePageState extends State<HomePage> {
           _last28Days += e.value;
         }
       });
-      setState(() {});
+      setState(() {
+        _isLoading = false;
+      });
     });
     super.initState();
   }
@@ -114,9 +119,13 @@ class _HomePageState extends State<HomePage> {
               height: 50,
             ),
             const Text('Statistic by seasons'),
-            Column(
-              children: seasons.reversed.toList(),
-            ),
+            _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Column(
+                    children: seasons.reversed.toList(),
+                  ),
             const SizedBox(
               height: 65,
             )

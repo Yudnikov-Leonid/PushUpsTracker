@@ -103,6 +103,7 @@ class MonthStatistic extends StatelessWidget {
                   height: 160,
                   child: GridView.count(
                     scrollDirection: Axis.horizontal,
+                    physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: 7,
                     children: result.map((value) => _box(value)).toList(),
                   ),
