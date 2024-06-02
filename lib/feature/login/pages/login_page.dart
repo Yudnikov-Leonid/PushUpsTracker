@@ -20,15 +20,35 @@ class LoginPage extends StatelessWidget {
           if (state is LoginSuccess) {
             return MainPage();
           } else if (state is LoginInitial) {
-            return Center(child: GoogleAuthButton(
-              onPressed: () {
-                bloc.add(LoginLoginEvent());
-              },
-            ));
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Push ups tracker',
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(
+                  height: 70,
+                ),
+                Center(child: GoogleAuthButton(
+                  onPressed: () {
+                    bloc.add(LoginLoginEvent());
+                  },
+                )),
+              ],
+            );
           } else if (state is LoginFailed) {
             return Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text(
+                    'Push ups tracker',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 70,
+                  ),
                   Center(child: GoogleAuthButton(
                     onPressed: () {
                       bloc.add(LoginLoginEvent());

@@ -37,7 +37,7 @@ class MonthStatistic extends StatelessWidget {
     final nextMonth = month + 3;
 
     final result = <int>[];
-    for (int i = 0; i < firstDayDateTime.weekday; i++) {
+    for (int i = 0; i < firstDayDateTime.weekday -1; i++) {
       result.add(-1);
     }
     while (month < nextMonth) {

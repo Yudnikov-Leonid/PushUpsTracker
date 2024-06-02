@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:push_ups/core/firebase_repository.dart';
+import 'package:push_ups/feature/login/bloc/login_bloc.dart';
+import 'package:push_ups/feature/login/bloc/login_event.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage(this._repository, {super.key});
@@ -52,9 +55,11 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ));
                 },
-                child: Text('Reset today')),
+                child: const Text('Reset today')),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<LoginBloc>().add(LogOutEvent());
+              },
               child: const Text('Log out'),
             )
           ],
