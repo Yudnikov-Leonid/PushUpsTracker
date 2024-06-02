@@ -4,7 +4,7 @@ import 'package:push_ups/feature/home/presentation/pages/home_page.dart';
 import 'package:push_ups/feature/profile/presentation/pages/profile_page.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({super.key});
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -19,14 +19,14 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    final _repository = FirebaseRepository();
-    _repository.init();
+    final repository = FirebaseRepository();
+    repository.init();
     _body = [
       HomePage(
-        _repository,
+        repository,
         key: const PageStorageKey('home'),
       ),
-      ProfilePage(_repository, key: const PageStorageKey('profile'))
+      ProfilePage(repository, key: const PageStorageKey('profile'))
     ];
     super.initState();
   }
