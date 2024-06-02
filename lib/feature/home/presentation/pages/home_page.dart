@@ -17,8 +17,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    final ref = FirebaseDatabase.instance.ref('push-ups');
+    final ref = FirebaseDatabase.instance.ref('push-ups').orderByChild('date');
     ref.onValue.listen((sn) {
+      _map.clear();
+      _data.clear();
+
       final list = sn.snapshot.children.where((child) =>
           child.child('userId').value.toString() ==
           FirebaseAuth.instance.currentUser!.uid);
@@ -55,8 +58,7 @@ class _HomePageState extends State<HomePage> {
       } else {
         title = 'Autumn';
       }
-      seasons
-          .add(MonthStatistic(title, v.map((e) => _data[e]!.value).toList()));
+      seasons.add(MonthStatistic(title, v.map((e) => _data[e]!).toList()));
     });
 
     return Scaffold(
@@ -68,6 +70,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(
+              width: double.infinity,
+            ),
             const Icon(
               Icons.person,
               size: 60,
@@ -92,7 +97,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const Text('Statistic by seasons'),
             Column(
-              children: seasons,
+              children: seasons.reversed.toList(),
             ),
             const SizedBox(
               height: 20,

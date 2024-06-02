@@ -2,18 +2,68 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:push_ups/core/colors.dart';
+import 'package:push_ups/feature/home/domain/entity/day_push_ups.dart';
+import 'package:intl/intl.dart';
 
 class MonthStatistic extends StatelessWidget {
   MonthStatistic(this.title, this.data, {super.key});
 
   final String title;
-  final List<int> data;
+  final List<DayPushUps> data;
 
   late int _max;
 
   @override
   Widget build(BuildContext context) {
-    _max = data.reduce(max);
+    final formatter = DateFormat('yyyy-MM-dd');
+
+    _max = data.map((e) => e.value).reduce(max);
+    var firstDayDateTime = formatter.parse(data.first.date);
+
+    firstDayDateTime =
+        DateTime(firstDayDateTime.year, firstDayDateTime.month, 1);
+
+    while (firstDayDateTime.month != 3 &&
+        firstDayDateTime.month != 6 &&
+        firstDayDateTime.month != 9 &&
+        firstDayDateTime.month != 12 &&
+        firstDayDateTime.day != 1) {
+      firstDayDateTime.add(const Duration(days: -1));
+      firstDayDateTime.add(Duration(days: -firstDayDateTime.day));
+      print('firstDayDateTime: ${formatter.format(firstDayDateTime)}');
+    }
+    var currentDate = firstDayDateTime.millisecondsSinceEpoch ~/ 86400000;
+
+    var month = firstDayDateTime.month;
+    final nextMonth = month + 3;
+
+    final result = <int>[];
+    while (month < nextMonth) {
+      if (data.isNotEmpty) {
+        if (formatter.format(
+                DateTime.fromMillisecondsSinceEpoch(currentDate * 86400000)) ==
+            data.first.date) {
+          result.add(data.first.value);
+          data.removeAt(0);
+        } else {
+          result.add(0);
+        }
+      } else {
+        result.add(0);
+      }
+      currentDate++;
+      if (nextMonth == 15) {
+        month =
+            DateTime.fromMillisecondsSinceEpoch(currentDate * 86400000).month;
+        if (month < 12) {
+          month += 12;
+        }
+      } else {
+        month =
+            DateTime.fromMillisecondsSinceEpoch(currentDate * 86400000).month;
+      }
+    }
+
     return Container(
       height: 240,
       width: double.infinity,
@@ -34,7 +84,7 @@ class MonthStatistic extends StatelessWidget {
             child: GridView.count(
               scrollDirection: Axis.horizontal,
               crossAxisCount: 7,
-              children: data.map((value) => _box(value)).toList(),
+              children: result.map((value) => _box(value)).toList(),
             ),
           ),
           const SizedBox(
@@ -43,7 +93,7 @@ class MonthStatistic extends StatelessWidget {
           Row(
             children: [
               Text(
-                '${data.fold(0, (a, b) => a + b)} in total',
+                '${data.fold(0, (a, b) => a + b.value)} in total',
                 style: const TextStyle(fontSize: 13),
               ),
               const Expanded(child: SizedBox()),
@@ -79,7 +129,7 @@ class MonthStatistic extends StatelessWidget {
             BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
         width: 17,
         height: 17,
-        margin: const EdgeInsets.symmetric(horizontal:  2));
+        margin: const EdgeInsets.symmetric(horizontal: 2));
   }
 
   Widget _box(int value) {
@@ -87,11 +137,11 @@ class MonthStatistic extends StatelessWidget {
     final Color color;
     if (percent == 0) {
       color = AppColors.oneLevelColor;
-    } else if (percent < 25) {
+    } else if (percent < 30) {
       color = AppColors.twoLevelColor;
-    } else if (percent < 50) {
+    } else if (percent < 60) {
       color = AppColors.threeLevelColor;
-    } else if (percent < 75) {
+    } else if (percent < 90) {
       color = AppColors.fourLevelColor;
     } else {
       color = AppColors.fiveLevelColor;
