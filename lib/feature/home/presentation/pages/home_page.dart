@@ -66,6 +66,14 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Push ups tracker'),
         centerTitle: true,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.green.shade300,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,15 +90,6 @@ class _HomePageState extends State<HomePage> {
               style: const TextStyle(fontSize: 18),
             ),
             Text('Last 28 days: 2500 push ups'),
-            const SizedBox(
-              height: 20,
-            ),
-            const SizedBox(
-                width: 100,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                )),
-            TextButton(onPressed: () {}, child: const Text('Add')),
             Text('Today: 80'),
             const SizedBox(
               height: 50,
@@ -100,7 +99,7 @@ class _HomePageState extends State<HomePage> {
               children: seasons.reversed.toList(),
             ),
             const SizedBox(
-              height: 20,
+              height: 65,
             )
           ],
         ),

@@ -146,11 +146,15 @@ class MonthStatistic extends StatelessWidget {
     } else {
       color = AppColors.fiveLevelColor;
     }
-    return Container(
-        decoration:
-            BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-        width: 10,
-        height: 10,
-        margin: const EdgeInsets.all(2));
+    return Tooltip(
+      message: value.toString(),
+      triggerMode: TooltipTriggerMode.tap,
+      child: Container(
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(4)),
+          width: 10,
+          height: 10,
+          margin: const EdgeInsets.all(2)),
+    );
   }
 }
