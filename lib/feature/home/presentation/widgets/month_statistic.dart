@@ -26,12 +26,11 @@ class MonthStatistic extends StatelessWidget {
     while (firstDayDateTime.month != 3 &&
         firstDayDateTime.month != 6 &&
         firstDayDateTime.month != 9 &&
-        firstDayDateTime.month != 12 &&
-        firstDayDateTime.day != 1) {
-      firstDayDateTime.add(const Duration(days: -1));
-      firstDayDateTime.add(Duration(days: -firstDayDateTime.day));
+        firstDayDateTime.month != 12) {
+      firstDayDateTime = DateTime(firstDayDateTime.year,
+          firstDayDateTime.month - 1, 1);
     }
-    var currentDate = firstDayDateTime.millisecondsSinceEpoch ~/ 86400000;
+    var currentDate = (firstDayDateTime.millisecondsSinceEpoch / 86400000).round();
 
     var month = firstDayDateTime.month;
     final nextMonth = month + 3;

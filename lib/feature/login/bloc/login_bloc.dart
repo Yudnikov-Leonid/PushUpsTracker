@@ -15,6 +15,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onLogOutEvent(LogOutEvent event, Emitter<LoginState> emit) async {
     await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
     emit(LoginInitial());
   }
 
